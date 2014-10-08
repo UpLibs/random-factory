@@ -429,6 +429,12 @@ final public class RandomGeneratorSIMDOrientedFastMersenneTwister extends
 		idx = N32;
 	}
 
+	private long seedSet ;
+	
+	public long getSeedSet() {
+		return seedSet;
+	}
+	
 	/**
 	 * Initializes the internal state array with a 64-bit seed.
 	 *
@@ -436,6 +442,8 @@ final public class RandomGeneratorSIMDOrientedFastMersenneTwister extends
 	 *            64-bit seed.
 	 */
 	private void setSeed(long seed) {
+		this.seedSet = seed ;
+		
 		initByArray((int) seed, (int) (seed >>> 32));
 	}
 

@@ -8,6 +8,8 @@ abstract public class RandomGenerator {
 	
 	abstract public int nextInt(int n) ;
 	
+	abstract public long nextLong() ;
+	
 	abstract public boolean nextBoolean() ;
 	
 	abstract public float nextFloat() ;
