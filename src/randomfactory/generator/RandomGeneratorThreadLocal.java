@@ -27,7 +27,11 @@ final public class RandomGeneratorThreadLocal extends RandomGeneratorIntMaskBase
 	
 	final private RandomGenerator mainGenerator ;
 	
-	final private ThreadLocal<RandomGenerator> threadLocalGenerator = new ThreadLocal<RandomGenerator>() ;
+	final private ThreadLocal<RandomGenerator> threadLocalGenerator = new ThreadLocal<RandomGenerator>() {
+		protected RandomGenerator initialValue() {
+			return mainGenerator.newInstance( createSeed() ) ;	
+		};
+	};
 	
 	final private AtomicLong seedCount = new AtomicLong(0L) ;
 	
@@ -45,19 +49,12 @@ final public class RandomGeneratorThreadLocal extends RandomGeneratorIntMaskBase
 	}
 	
 	public RandomGenerator getRandomGenerator() {
-		RandomGenerator generator = threadLocalGenerator.get() ;
-		if (generator != null) return generator ;
-		
-		generator = mainGenerator.newInstance( createSeed() ) ;
-		
-		threadLocalGenerator.set(generator);
-		
-		return generator ;
+		return threadLocalGenerator.get() ;
 	}
 	
 	@Override
 	protected int next32() {
-		return getRandomGenerator().nextInt() ;
+		return threadLocalGenerator.get().nextInt() ;
 	}
 
 	@Override
