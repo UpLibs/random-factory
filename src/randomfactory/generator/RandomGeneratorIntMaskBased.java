@@ -4,16 +4,29 @@ import randomfactory.RandomGenerator;
 
 abstract public class RandomGeneratorIntMaskBased extends RandomGenerator {
 
-	abstract protected int next(int nbits) ;
+	@Override
+	abstract public RandomGeneratorIntMaskBased clone() ;
+	
+	@Override
+	abstract public RandomGeneratorIntMaskBased newInstance() ;
+	
+	@Override
+	abstract public RandomGeneratorIntMaskBased newInstance(long... seed) ;
+	
+	abstract protected int next32() ;
+	
+	protected int next(int nbits) {
+		return next32() >>> (32 - nbits) ;
+	}
 	
 	@Override
 	public int nextInt() {
-		return next(32) ;
+		return next32() ;
 	}
 
 	@Override
 	public long nextLong() {
-        return ((long)(next(32)) << 32) + next(32);
+        return ((long)(next32()) << 32) + next32();
     }
 	
 	@Override

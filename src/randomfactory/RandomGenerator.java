@@ -1,7 +1,12 @@
 package randomfactory;
 
-abstract public class RandomGenerator {
+abstract public class RandomGenerator implements Cloneable {
 
+	abstract public RandomGenerator clone() ;
+	
+	abstract public RandomGenerator newInstance() ;
+	abstract public RandomGenerator newInstance(long... seed) ;
+	
 	abstract public void initialize(long... seed) ;
 	
 	abstract public int nextInt() ;

@@ -181,6 +181,25 @@ final public class RandomGeneratorSIMDOrientedFastMersenneTwister extends
 	public RandomGeneratorSIMDOrientedFastMersenneTwister(long seed) {
 		setSeed(seed);
 	}
+	
+	@Override
+	public RandomGeneratorSIMDOrientedFastMersenneTwister clone() {
+		RandomGeneratorSIMDOrientedFastMersenneTwister clone = new RandomGeneratorSIMDOrientedFastMersenneTwister(1) ;
+		clone.idx = this.idx ;
+		clone.seedSet = this.seedSet ;
+		System.arraycopy(this.sfmt, 0, clone.sfmt, 0, this.sfmt.length);
+		return clone ;
+	}
+	
+	@Override
+	public RandomGeneratorSIMDOrientedFastMersenneTwister newInstance() {
+		return new RandomGeneratorSIMDOrientedFastMersenneTwister() ;
+	}
+	
+	@Override
+	public RandomGeneratorSIMDOrientedFastMersenneTwister newInstance(long... seed) {
+		return new RandomGeneratorSIMDOrientedFastMersenneTwister(seed[0]) ;
+	}
 
 	// Instance methods
 	// ////////////////////////////////////////////////////////////
@@ -381,7 +400,8 @@ final public class RandomGeneratorSIMDOrientedFastMersenneTwister extends
 	 *
 	 * @return next number.
 	 */
-	public int next() {
+	@Override
+	public int next32() {
 		if (idx >= N32) {
 			genRandAll();
 			idx = 0;
@@ -389,15 +409,6 @@ final public class RandomGeneratorSIMDOrientedFastMersenneTwister extends
 		return sfmt[idx++];
 	}
 	
-	@Override
-	protected int next(int nbits) {
-		if (idx >= N32) {
-			genRandAll();
-			idx = 0;
-		}
-		return sfmt[idx++];
-	}
-
 	/**
 	 * Fills the given array with pseudorandom 32-bit integers. Equivalent to
 	 * {@link #fillArray(int[],int)} applied to

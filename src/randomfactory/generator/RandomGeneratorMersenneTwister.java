@@ -113,6 +113,24 @@ final public class RandomGeneratorMersenneTwister extends RandomGeneratorIntMask
         mt = new int[N];
         setSeed(seed);
     }
+    
+    @Override
+	public RandomGeneratorMersenneTwister clone() {
+    	RandomGeneratorMersenneTwister clone = new RandomGeneratorMersenneTwister(1) ;
+    	clone.mti = this.mti ;
+    	System.arraycopy( this.mt, 0, clone.mt, 0, this.mt.length) ;
+		return clone ;
+	}
+    
+    @Override
+	public RandomGeneratorMersenneTwister newInstance() {
+		return new RandomGeneratorMersenneTwister() ;
+	}
+	
+	@Override
+	public RandomGeneratorMersenneTwister newInstance(long... seed) {
+		return new RandomGeneratorMersenneTwister(seed[0]) ;
+	}
 
     private void setSeed(int seed) {
         // we use a long masked by 0xffffffffL as a poor man unsigned int
@@ -176,7 +194,7 @@ final public class RandomGeneratorMersenneTwister extends RandomGeneratorIntMask
     private void setSeed(long seed) {
         setSeed(new int[] { (int) (seed >>> 32), (int) (seed & 0xffffffffl) });
     }
-
+    
     /** Generate next pseudorandom number.
      * <p>This method is the core generation algorithm. It is used by all the
      * public generation methods for the various primitive types {@link
@@ -187,8 +205,9 @@ final public class RandomGeneratorMersenneTwister extends RandomGeneratorIntMask
      * @return random bits generated
      */
     
+
     @Override
-    protected int next(int bits) {
+    protected int next32() {
         int y;
 
         if (mti >= N) { // generate N words at one time
@@ -218,9 +237,8 @@ final public class RandomGeneratorMersenneTwister extends RandomGeneratorIntMask
         y ^= (y <<   7) & 0x9d2c5680;
         y ^= (y <<  15) & 0xefc60000;
         y ^=  y >>> 18;
-
-        return y >>> (32 - bits);
-
+        
+        return y ;
     }
     
 	@Override

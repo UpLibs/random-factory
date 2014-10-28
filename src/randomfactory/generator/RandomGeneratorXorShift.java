@@ -6,7 +6,28 @@ import randomfactory.RandomTools;
 final public class RandomGeneratorXorShift extends RandomGeneratorIntMaskBased {
 	
 	public RandomGeneratorXorShift() {
-		initialize( RandomTools.createSeed() ) ;
+		this( RandomTools.createSeed() ) ;
+	}
+	
+	public RandomGeneratorXorShift(long seed) {
+		initialize(seed) ;
+	}
+	
+	@Override
+	public RandomGeneratorXorShift clone() {
+		RandomGeneratorXorShift clone = new RandomGeneratorXorShift(1) ;
+		clone.seed = this.seed ;
+		return clone ;
+	}
+	
+	@Override
+	public RandomGeneratorXorShift newInstance() {
+		return new RandomGeneratorXorShift() ;
+	}
+	
+	@Override
+	public RandomGeneratorXorShift newInstance(long... seed) {
+		return new RandomGeneratorXorShift(seed[0]) ;
 	}
 
 	private long seed;
@@ -17,14 +38,13 @@ final public class RandomGeneratorXorShift extends RandomGeneratorIntMaskBased {
 	}
 
 	@Override
-	public int next(int nbits) {
+	protected int next32() {
 		long x = seed;
 		x ^= (x << 21);
 		x ^= (x >>> 35);
 		x ^= (x << 4);
 		seed = x;
-		x &= ((1L << nbits) - 1);
-		return (int) x;
+		return (int) x ;
 	}
 	
 }

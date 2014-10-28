@@ -4,7 +4,9 @@ import randomfactory.RandomGenerator;
 
 final public class RandomGeneratorHybrid extends RandomGeneratorIntMaskBased {
 
-	abstract static private class SubGeneratorCaller {
+	abstract static private class SubGeneratorCaller implements Cloneable {
+		abstract public SubGeneratorCaller clone() ;
+		abstract public int next32() ;
 		abstract public int next(int nbits) ;
 		abstract public RandomGenerator getGenerator() ;
 	}
@@ -18,13 +20,23 @@ final public class RandomGeneratorHybrid extends RandomGeneratorIntMaskBased {
 		}
 		
 		@Override
+		public SubGeneratorCallerGeneric clone() {
+			return new SubGeneratorCallerGeneric(this.generator.clone()) ;
+		}
+		
+		@Override
 		public RandomGenerator getGenerator() {
 			return generator ;
 		}
 
 		@Override
-		public int next(int nbits) {
+		public int next32() {
 			return generator.nextInt() ;
+		}
+		
+		@Override
+		public int next(int nbits) {
+			return generator.nextInt() & ((1 << nbits) - 1) ;
 		}
 	}
 	
@@ -37,8 +49,18 @@ final public class RandomGeneratorHybrid extends RandomGeneratorIntMaskBased {
 		}
 		
 		@Override
+		public SubGeneratorCallerIntMaskBased clone() {
+			return new SubGeneratorCallerIntMaskBased(this.generator.clone()) ;
+		}
+		
+		@Override
 		public RandomGeneratorIntMaskBased getGenerator() {
 			return generator ;
+		}
+		
+		@Override
+		public int next32() {
+			return generator.next32() ;
 		}
 
 		@Override
@@ -69,9 +91,45 @@ final public class RandomGeneratorHybrid extends RandomGeneratorIntMaskBased {
 			}
 			
 			this.generatorsCallers[i] = caller ;
-			
+		}
+	}
+	
+	private RandomGeneratorHybrid(SubGeneratorCaller[] generatorsCallers,int nextCount) {
+		this.generatorsCallers = generatorsCallers;
+		this.nextCount = nextCount;
+	}
+
+	@Override
+	public RandomGeneratorHybrid clone() {
+		SubGeneratorCaller[] callers = new SubGeneratorCaller[this.generatorsCallers.length] ;
+		
+		for (int i = 0; i < callers.length; i++) {
+			callers[i] = this.generatorsCallers[i].clone() ;
 		}
 		
+		return new RandomGeneratorHybrid(callers, this.nextCount);
+	}
+	
+	@Override
+	public RandomGeneratorHybrid newInstance() {
+		RandomGenerator[] gens = new RandomGenerator[this.generatorsCallers.length] ;
+		
+		for (int i = 0; i < gens.length; i++) {
+			gens[i] = this.generatorsCallers[i].getGenerator().newInstance() ;
+		}
+		
+		return new RandomGeneratorHybrid(gens) ;
+	}
+	
+	@Override
+	public RandomGeneratorHybrid newInstance(long... seed) {
+		RandomGenerator[] gens = new RandomGenerator[this.generatorsCallers.length] ;
+		
+		for (int i = 0; i < gens.length; i++) {
+			gens[i] = this.generatorsCallers[i].getGenerator().newInstance( seed[i % seed.length] ) ;
+		}
+		
+		return new RandomGeneratorHybrid(gens) ;
 	}
 	
 	public int getGeneratorsSize() {
@@ -89,6 +147,12 @@ final public class RandomGeneratorHybrid extends RandomGeneratorIntMaskBased {
 	}
 	
 	private int nextCount = 0 ;
+	
+	@Override
+	protected int next32() {
+		SubGeneratorCaller caller = generatorsCallers[ nextCount++ % generatorsCallers.length ] ;
+		return caller.next32() ;
+	}
 	
 	@Override
 	protected int next(int nbits) {
