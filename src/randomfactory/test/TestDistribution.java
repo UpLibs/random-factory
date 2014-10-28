@@ -16,7 +16,7 @@ import randomfactory.generator.RandomGeneratorXorShift;
 
 public class TestDistribution {
 	
-	static final public boolean FAST_TEST = true ;
+	static final public boolean FAST_TEST = false ;
 	
 	static final public long[] SEEDS = new long[] {
 		123456789L,
