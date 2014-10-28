@@ -4,10 +4,14 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import randomfactory.RandomGenerator;
 
-final public class RandomGeneratorThreadLocal extends RandomGeneratorIntMaskBased {
+final public class RandomGeneratorThreadLocal extends RandomGeneratorIntMaskBasedConcurrent {
 
 	public RandomGeneratorThreadLocal() {
 		this( new RandomGeneratorMersenneTwister() ) ;
+	}
+	
+	public RandomGeneratorThreadLocal(long seed) {
+		this( new RandomGeneratorMersenneTwister(seed) ) ;
 	}
 	
 	public RandomGeneratorThreadLocal(RandomGenerator... randomGenerators) {
