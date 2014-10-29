@@ -16,7 +16,7 @@ import randomfactory.generator.RandomGeneratorXorShift;
 
 public class TestDistribution {
 	
-	static final public boolean FAST_TEST = false ;
+	static final public boolean FAST_TEST = true ;
 	
 	static final public long[] SEEDS = new long[] {
 		123456789L,
@@ -148,18 +148,24 @@ public class TestDistribution {
 	private void checkDistribution(Class<? extends RandomGenerator> randGenClass, RandomGenerator... params) {
 		RandomGenerator randGenBase = createRandomGenerator(1, randGenClass, params) ;
 		
+		double checkDistribution_nextBoolean_Error = 0 ;
+		double checkDistribution_nextInt_Error = 0 ;
+		
 		for (int i = 0; i < SEEDS.length; i++) {
 			long seed = SEEDS[i] ;
-			checkDistribution( randGenBase.newInstance(seed) );
+			RandomGenerator randGen = randGenBase.newInstance(seed) ;
+			
+			checkDistribution_nextBoolean_Error += checkDistribution_nextBoolean(randGen);
+			checkDistribution_nextInt_Error += checkDistribution_nextInt(randGen);	
 		}
+		
+		checkDistribution_nextBoolean_Error /= SEEDS.length ;
+		checkDistribution_nextInt_Error /= SEEDS.length ;
+		
+		System.out.println("checkDistribution> nextBoolean: "+ checkDistribution_nextBoolean_Error +" > nextInt: "+ checkDistribution_nextInt_Error +" > "+ randGenClass);
 	}
 	
-	private void checkDistribution(RandomGenerator randGen) {
-		checkDistribution_nextBoolean(randGen);
-		checkDistribution_nextInt(randGen);
-	}
-	
-	private void checkDistribution_nextBoolean(RandomGenerator randGen) {
+	private double checkDistribution_nextBoolean(RandomGenerator randGen) {
 		
 		int[] count = new int[2] ;
 		
@@ -178,15 +184,26 @@ public class TestDistribution {
 		double minDist = distribution * (1-tolerance) ;
 		double maxDist = distribution * (1+tolerance) ;
 		
+		double errTotal = 0 ;
+		double errMax = Double.NEGATIVE_INFINITY ;
+		
 		for (int i = 0; i < count.length; i++) {
 			int c = count[i] ;
 			
-			assertTrue( "distribution: "+ minDist +" <= "+ c +" <= "+ maxDist , c >= minDist && c <= maxDist ) ;
+			assertTrue( c >= minDist && c <= maxDist ) ;
+			
+			double err = 1 - (c / distribution) ;
+			if (err < 0) err = -err ;
+			
+			errTotal += err ;
+			if (err > errMax) errMax = err ;
 		}
 		
+		double errMean = errTotal / count.length ;
+		return errMean ;
 	}
 	
-	private void checkDistribution_nextInt(RandomGenerator randGen) {
+	private double checkDistribution_nextInt(RandomGenerator randGen) {
 		
 		int[] count = new int[100] ;
 		
@@ -204,14 +221,22 @@ public class TestDistribution {
 		
 		double minDist = distribution * (1-tolerance) ;
 		double maxDist = distribution * (1+tolerance) ;
+
+		double errTotal = 0 ;
 		
 		for (int i = 0; i < count.length; i++) {
 			int c = count[i] ;
 			
 			assertTrue( c >= minDist && c <= maxDist ) ;
 			
+			double err = 1 - (c / distribution) ;
+			if (err < 0) err = -err ;
+			
+			errTotal += err ;
 		}
 		
+		double errMean = errTotal / count.length ;
+		return errMean ;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////
