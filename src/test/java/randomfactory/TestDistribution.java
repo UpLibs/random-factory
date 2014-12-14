@@ -1,4 +1,4 @@
-package randomfactory.test;
+package randomfactory;
 
 import static org.junit.Assert.assertTrue;
 
