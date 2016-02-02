@@ -390,6 +390,7 @@ final public class RandomGeneratorSIMDOrientedFastMersenneTwister extends
 	/**
 	 * Returns the smallest array size allowed as an argument to
 	 * {@link #fillArray}.
+	 * @return the minimal array size:
 	 */
 	public int minArraySize() {
 		return N32;

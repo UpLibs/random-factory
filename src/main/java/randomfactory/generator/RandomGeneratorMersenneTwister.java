@@ -29,25 +29,23 @@ import randomfactory.RandomTools;
  * the generator written in C by Makoto Matsumoto and Takuji
  * Nishimura. Here is their original copyright:</p>
 
- * <table border="0" width="80%" cellpadding="10" align="center" bgcolor="#E0E0E0">
- * <tr><td>Copyright (C) 1997 - 2002, Makoto Matsumoto and Takuji Nishimura,
- *     All rights reserved.</td></tr>
+ * <p>Copyright (C) 1997 - 2002, Makoto Matsumoto and Takuji Nishimura,
+ *     All rights reserved.
 
- * <tr><td>Redistribution and use in source and binary forms, with or without
+ * <p>Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * <ol>
- *   <li>Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.</li>
- *   <li>Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.</li>
- *   <li>The names of its contributors may not be used to endorse or promote
- *       products derived from this software without specific prior written
- *       permission.</li>
- * </ol></td></tr>
-
- * <tr><td><strong>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+ * 
+ * <p>- Redistributions of source code must retain the above copyright
+ *      notice, this list of conditions and the following disclaimer.
+ * <p>- Redistributions in binary form must reproduce the above copyright
+ *      notice, this list of conditions and the following disclaimer in the
+ *      documentation and/or other materials provided with the distribution.
+ * <p>- The names of its contributors may not be used to endorse or promote
+ *      products derived from this software without specific prior written
+ *      permission.
+ * 
+ * <p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
  * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -59,9 +57,8 @@ import randomfactory.RandomTools;
  * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
- * DAMAGE.</strong></td></tr>
- * </table>
-
+ * DAMAGE.
+ *
  */
 final public class RandomGeneratorMersenneTwister extends RandomGeneratorIntMaskBased {
 
@@ -198,10 +195,9 @@ final public class RandomGeneratorMersenneTwister extends RandomGeneratorIntMask
     /** Generate next pseudorandom number.
      * <p>This method is the core generation algorithm. It is used by all the
      * public generation methods for the various primitive types {@link
-     * #nextBoolean()}, {@link #nextBytes(byte[])}, {@link #nextDouble()},
-     * {@link #nextFloat()}, {@link #nextGaussian()}, {@link #nextInt()},
+     * #nextBoolean()}, {@link #nextDouble()},
+     * {@link #nextFloat()}, {@link #nextInt()},
      * {@link #next(int)} and {@link #nextLong()}.</p>
-     * @param bits number of random bits to produce
      * @return random bits generated
      */
     
