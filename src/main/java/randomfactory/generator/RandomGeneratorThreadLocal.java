@@ -56,6 +56,38 @@ final public class RandomGeneratorThreadLocal extends RandomGeneratorIntMaskBase
 	protected int next32() {
 		return threadLocalGenerator.get().nextInt() ;
 	}
+	
+	public void fillFloats(float[] a) {
+		fillFloats(a, a.length);
+	}
+	
+	public void fillFloats(float[] a, int size) {
+		RandomGenerator randomGenerator = threadLocalGenerator.get() ;
+		
+		for (int i = size-1; i >= 0; i--) {
+			a[i] = ( randomGenerator.nextInt() >>> (32 - 24) ) / ((float)(1 << 24));
+		}
+	}
+	
+	public void fillFloats(float[][] a) {
+		for (int i = a.length-1 ; i >= 0; i--) {
+			fillFloats( a[i] ) ;
+		}
+	}
+	
+	public void fillFloats(float[][] a, int size) {
+		for (int i = a.length-1 ; i >= 0; i--) {
+			float[] fs = a[i] ;
+			
+			int lng = size ;
+			if (lng > fs.length) lng = fs.length ;
+			
+			fillFloats(fs, lng) ;
+			
+			size -= lng ;
+			if (size <= 0) break ;
+		}
+	}
 
 	@Override
 	public RandomGeneratorThreadLocal clone() {

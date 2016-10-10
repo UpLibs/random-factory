@@ -36,7 +36,7 @@ abstract public class RandomGeneratorIntMaskBased extends RandomGenerator {
 
 	@Override
 	public float nextFloat() {
-		return next(24) / ((float)(1 << 24));
+		return (next32() >>> (32 - 24)) / ((float)(1 << 24));
 	}
 
 	@Override
